@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { Provider } from "react-redux";
 import { store } from "./app/store";
-import ProductListingPage from "./features/products/productListingPage";
+import ProductListingPage from "./features/products/ProductListingPage";
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
 
 function App() {
