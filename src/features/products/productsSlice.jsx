@@ -19,8 +19,21 @@ const productsSlice = createSlice({
     items: [],
     status: "idle", // 'idle' | 'loading' | 'succeeded' | 'failed'
     error: null,
+    searchTerm: "",
+    selectedCategory: "all",
+    sortBy: "price-asc",
   },
-  reducers: {},
+  reducers: {
+    setSearchTerm: (state, action) => {
+      state.searchTerm = action.payload;
+    },
+    setSelectedCategory: (state, action) => {
+      state.selectedCategory = action.payload;
+    },
+    setSortBy: (state, action) => {
+      state.sortBy = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchProducts.pending, (state) => {
@@ -40,5 +53,37 @@ const productsSlice = createSlice({
 export const selectAllProducts = (state) => state.products.items;
 export const selectProductsStatus = (state) => state.products.status;
 export const selectProductsError = (state) => state.products.error;
+export const { setSearchTerm, setSelectedCategory, setSortBy } =
+  productsSlice.actions;
+export const selectSearchTerm = (state) => state.products.searchTerm;
+export const selectSelectedCategory = (state) =>
+  state.products.selectedCategory;
+export const selectSortBy = (state) => state.products.sortBy;
+
+export const selectFilteredAndSortedProducts = (state) => {
+  const products = selectAllProducts(state);
+  const searchTerm = selectSearchTerm(state).toLowerCase();
+  const selectedCategory = selectSelectedCategory(state);
+  const sortBy = selectSortBy(state);
+
+  let filteredProducts = products.filter((product) =>
+    product.title.toLowerCase().includes(searchTerm)
+  );
+
+  if (selectedCategory !== "all") {
+    filteredProducts = filteredProducts.filter(
+      (product) => product.category === selectedCategory
+    );
+  }
+
+  return filteredProducts.slice().sort((a, b) => {
+    if (sortBy === "price-asc") {
+      return a.price - b.price;
+    } else if (sortBy === "price-desc") {
+      return b.price - a.price;
+    }
+    return 0;
+  });
+};
 
 export default productsSlice.reducer;
