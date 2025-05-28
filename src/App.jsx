@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { Provider } from "react-redux";
 import { store } from "./app/store";
 import ProductListingPage from "./features/products/ProductListingPage";
+import ProductDetailPage from "./features/productDetails/ProductDetailPage";
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
         </AppBar>
         <Routes>
           <Route path="/" element={<ProductListingPage />} />
+          <Route path="/product/:id" element={<ProductDetailPage />} />{" "}
         </Routes>
       </Router>
     </Provider>
