@@ -1,8 +1,15 @@
 import React from "react";
-import { Card, CardContent, CardMedia, Typography, Box } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Button,
+  Box,
+} from "@mui/material";
 import { Link } from "react-router-dom";
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, onToggleFavorite, isFavorite }) => {
   return (
     <Card
       sx={{
@@ -17,7 +24,6 @@ const ProductCard = ({ product }) => {
         to={`/product/${product.id}`}
         style={{ textDecoration: "none", color: "inherit" }}
       >
-        {" "}
         <CardMedia
           component="img"
           height="140"
@@ -34,6 +40,17 @@ const ProductCard = ({ product }) => {
           </Typography>
         </CardContent>
       </Link>
+      <Box sx={{ p: 2 }}>
+        {" "}
+        <Button
+          variant="contained"
+          color={isFavorite ? "secondary" : "primary"}
+          onClick={() => onToggleFavorite(product)}
+          fullWidth
+        >
+          {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
+        </Button>
+      </Box>
     </Card>
   );
 };

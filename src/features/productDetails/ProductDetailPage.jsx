@@ -8,8 +8,12 @@ import {
   selectProductDetailsStatus,
   selectProductDetailsError,
 } from "./productDetailsSlice";
+import {
+  toggleFavorite,
+  selectFavoriteProductIds,
+} from "../favorites/favoritesSlice";
 import LoadingSpinner from "../../components/LoadingSpinner";
-import { Container, Typography, Box, CardMedia } from "@mui/material";
+import { Container, Typography, Box, CardMedia, Button } from "@mui/material";
 
 const ProductDetailPage = () => {
   const { id } = useParams();
@@ -17,13 +21,21 @@ const ProductDetailPage = () => {
   const product = useSelector(selectCurrentProduct);
   const status = useSelector(selectProductDetailsStatus);
   const error = useSelector(selectProductDetailsError);
+  const favoriteProductIds = useSelector(selectFavoriteProductIds);
 
+  const isFavorite = product ? favoriteProductIds.includes(product.id) : false;
   useEffect(() => {
     dispatch(fetchProductDetails(id));
     return () => {
       dispatch(clearProductDetails());
     };
   }, [dispatch, id]);
+
+  const handleToggleFavorite = () => {
+    if (product) {
+      dispatch(toggleFavorite(product));
+    }
+  };
 
   if (status === "loading") {
     return <LoadingSpinner />;
@@ -90,6 +102,15 @@ const ProductDetailPage = () => {
         <Typography variant="body2" color="text.secondary">
           Rating: {product.rating.rate} ({product.rating.count} reviews)
         </Typography>
+        <Button
+          variant="contained"
+          color={isFavorite ? "secondary" : "primary"}
+          onClick={handleToggleFavorite}
+          sx={{ mt: 3 }}
+          fullWidth
+        >
+          {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
+        </Button>
       </Box>
     </Container>
   );

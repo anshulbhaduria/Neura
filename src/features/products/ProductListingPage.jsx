@@ -27,6 +27,10 @@ import {
 } from "@mui/material";
 import { fetchCategories as fetchCategoriesApi } from "../../api/fakeStoreApi";
 import useDebounce from "../../hooks/useDebounce";
+import {
+  toggleFavorite,
+  selectFavoriteProductIds,
+} from "../favorites/favoritesSlice";
 
 const ProductListingPage = () => {
   const dispatch = useDispatch();
@@ -36,6 +40,7 @@ const ProductListingPage = () => {
   const productsError = useSelector(selectProductsError);
   const selectedCategory = useSelector(selectSelectedCategory);
   const sortBy = useSelector(selectSortBy);
+  const favoriteProductIds = useSelector(selectFavoriteProductIds);
 
   const searchTerm = useSelector(selectSearchTerm);
   const [inputValue, setInputValue] = useState(searchTerm);
@@ -75,6 +80,10 @@ const ProductListingPage = () => {
 
   const handleSortChange = (event) => {
     dispatch(setSortBy(event.target.value));
+  };
+
+  const handleToggleFavorite = (product) => {
+    dispatch(toggleFavorite(product));
   };
 
   if (productsStatus === "loading") {
@@ -141,7 +150,11 @@ const ProductListingPage = () => {
         <Grid container spacing={4} justifyContent="center">
           {products.map((product) => (
             <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
-              <ProductCard product={product} />
+              <ProductCard
+                product={product}
+                onToggleFavorite={handleToggleFavorite}
+                isFavorite={favoriteProductIds.includes(product.id)}
+              />
             </Grid>
           ))}
         </Grid>
